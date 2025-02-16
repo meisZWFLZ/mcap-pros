@@ -15,3 +15,13 @@ temp.log
 temp.errors
 *.ini
 .d/
+
+# PROS templates
+*.zip
+
+# Generated cpp schema headers 
+*_generated.h
+include/foxglove/LICENSE.md
+
+# Binary schema files
+*.bfbs
