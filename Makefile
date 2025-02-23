@@ -65,7 +65,8 @@ TEMPLATE_FILES+=$(INCDIR)/foxglove/*.h $(INCDIR)/foxglove/LICENSE.md
 # Add flatbuffers library files
 TEMPLATE_FILES+=$(INCDIR)/flatbuffers/*.h $(INCDIR)/flatbuffers/pch/*.h
 
-.DEFAULT_GOAL=quick
+# Add makefile extension for no-zstd flag
+TEMPLATE_FILES+=$(FWDIR)/mcap-no-zstd.mk
 
 ################################################################################
 ################################################################################
