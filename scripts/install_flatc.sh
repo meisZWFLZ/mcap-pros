@@ -43,8 +43,11 @@ cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
 # Build flatc
 make -j$(($(nproc) - 1)) flatc
 
+target_dir="$HOME/.local/bin"
+
 # Move flatc to the bin directory
-mv flatc "$HOME/.local/bin"
+mkdir -p "$target_dir"
+mv -t "$target_dir" flatc 
 
 echo "flatc installed!"
 
