@@ -88,7 +88,7 @@ template: gen_schema_code clean-template $(LIBAR)
 clean_gen_schema_code:
 	@echo Cleaning generated schema code
 	-$Drm -rf $(SCHEMAS_PATH)
-	-$Drm -rf $(SCHEMAS_GEN_OUT_PATH)
+	-$Drm -rf $(SCHEMAS_GEN_OUT_PATH)/{LICENSE.md,*_generated.h}
 
 # TODO: Create rule for:
 # flatc --binary --schema -o ./static.lib -I build/foxglove-sdk/schemas/flatbuffer build/foxglove-sdk/schemas/flatbuffer/*.fbs
