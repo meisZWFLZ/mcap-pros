@@ -1,16 +1,13 @@
 #include "main.h"
 
-#define MCAP_IMPLEMENTATION
-#define MCAP_COMPRESSION_NO_ZSTD
 #include "mcap/writer.hpp"
-#include "foxglove_schema.h"
+#include "foxglove/schema.h"
 
 #include "foxglove/PackedElementField_generated.h"
 #include "foxglove/Time_generated.h"
 #include "foxglove/PointCloud_generated.h"
 
-#include "asset.h"
-
+#include <array>
 #include <chrono>
 #include <cmath>
 #include <cstring>
@@ -110,18 +107,21 @@ void initialize() {
     // Slightly increase the size of the cloud on every frame.
     float cloudScale = 1.f + (static_cast<float>(frameIndex) / 50.f);
 
-    std::vector<flatbuffers::Offset<foxglove::PackedElementField>> fields;
+    std::array<flatbuffers::Offset<foxglove::PackedElementField>, 3> fields;
     {
       // Describe the data layout to the consumer of the pointcloud. There are 3
       // single-precision float fields per point.
       const char* const fieldNames[] = {"x", "y", "z"};
+      static_assert(sizeof(fieldNames) / sizeof(fieldNames[0]) ==
+                        sizeof(fields) / sizeof(fields[0]),
+                    "field arrays do not have equal length");
 
       int fieldOffset = 0;
-      for (const auto& name : fieldNames) {
-        auto fieldName = builder.CreateString(name);
+      for (size_t i = 0; i < sizeof(fields) / sizeof(fields[0]); i++) {
+        auto fieldName = builder.CreateString(fieldNames[i]);
         auto field = foxglove::CreatePackedElementField(
             builder, fieldName, fieldOffset, foxglove::NumericType_FLOAT32);
-        fields.push_back(field);
+        fields[i] = field;
         fieldOffset += sizeof(float);
       }
     }
@@ -138,7 +138,7 @@ void initialize() {
     auto data =
         builder.CreateVector(reinterpret_cast<const uint8_t*>(pointData.data()),
                              pointData.size() * sizeof(float));
-    auto fieldVector = builder.CreateVector(fields);
+    auto fieldVector = builder.CreateVector(fields.begin(), fields.size());
     auto frameId = builder.CreateString("pointcloud");
 
     auto pose =
@@ -151,7 +151,6 @@ void initialize() {
     auto pointCloud = foxglove::CreatePointCloud(
         builder, &timestamp, frameId, pose, sizeof(float) * FIELDS_PER_POINT,
         fieldVector, data);
-    // pointCloud;
     builder.Finish(pointCloud);
 
     // Include the pointcloud data in a message, then write it into the MCAP
