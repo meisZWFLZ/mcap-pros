@@ -49,7 +49,7 @@ IS_LIBRARY:=1
 # Be sure that your header files are in the include directory inside of a folder with the
 # same name as what you set LIBNAME to below.
 LIBNAME:=mcap
-VERSION:=0.1.0
+VERSION:=0.2.0
 # EXCLUDE_SRC_FROM_LIB= $(SRCDIR)/unpublishedfile.c
 # this line excludes opcontrol.c and similar files
 EXCLUDE_SRC_FROM_LIB+=$(foreach file, $(SRCDIR)/main,$(foreach cext,$(CEXTS),$(file).$(cext)) $(foreach cxxext,$(CXXEXTS),$(file).$(cxxext)))
@@ -80,7 +80,7 @@ clean:: clean_gen_schema_code
 	-$Drm -rf $(BUILDDIR)
 
 # Override the default template rule to build the foxglove schemas
-template: gen_schema_code clean-template $(LIBAR)
+template:: gen_schema_code clean-template $(LIBAR)
 	@echo "Creating template"
 	$Dpros c create-template . $(LIBNAME) $(VERSION) $(foreach file,$(TEMPLATE_FILES) $(LIBAR),--system "$(file)") --target v5 $(CREATE_TEMPLATE_FLAGS)
 
