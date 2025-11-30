@@ -22,13 +22,13 @@
 
 #define FOXGLOVE_SCHEMA(x)                                                     \
   extern "C" {                                                                 \
-  extern uint8_t _binary_static_foxglove_##x##_bfbs_start[],                   \
-      _binary_static_foxglove_##x##_bfbs_size[];                               \
+  extern uint8_t _binary_static_lib_foxglove_##x##_bfbs_start[],               \
+      _binary_static_lib_foxglove_##x##_bfbs_size[];                           \
   }                                                                            \
   static std::vector<std::byte> x##Bytes(                                      \
-      (std::byte*)_binary_static_foxglove_##x##_bfbs_start,                    \
-      (std::byte*)_binary_static_foxglove_##x##_bfbs_start +                   \
-          (std::size_t)_binary_static_foxglove_##x##_bfbs_size);               \
+      (std::byte*)_binary_static_lib_foxglove_##x##_bfbs_start,                \
+      (std::byte*)_binary_static_lib_foxglove_##x##_bfbs_start +               \
+          (std::size_t)_binary_static_lib_foxglove_##x##_bfbs_size);           \
   namespace foxglove::schemas {                                                \
   mcap::Schema x("foxglove." #x, "flatbuffer", x##Bytes);                      \
   }

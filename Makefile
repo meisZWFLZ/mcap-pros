@@ -91,14 +91,13 @@ clean_gen_schema_code:
 	-$Drm -rf $(SCHEMAS_GEN_OUT_PATH)/{LICENSE.md,*_generated.h}
 
 # TODO: Create rule for:
-# flatc --binary --schema -o ./static.lib -I build/foxglove-sdk/schemas/flatbuffer build/foxglove-sdk/schemas/flatbuffer/*.fbs
+# flatc --binary --schema -o ./static.lib/foxglove -I build/foxglove-sdk/schemas/flatbuffer build/foxglove-sdk/schemas/flatbuffer/*.fbs
 
 # Generate code from foxglove flatbuffer schemas
 gen_schema_code: clean_gen_schema_code
 	-$D# Install flatc if it is not already installed
 	-$D./scripts/install_flatc.sh
-
-	-$D# Install 
+ 
 	@echo Cloning schemas repo
 	-$Dgit clone $(SCHEMAS_REPO_URL) --depth=1 --no-checkout --branch=$(SCHEMAS_TAG) $(SCHEMAS_PATH) 2> /dev/null
 	-$Dgit -C $(SCHEMAS_PATH) sparse-checkout init --cone
